@@ -63,18 +63,23 @@ class Mtool_Codegen_Config
      *
      * @param string $path separated by slash (/)
      * @param string $value
+     * @param array $attributes
      */
-    public function set($path, $value)
+    public function set($path, $value, $attributes = array())
     {
         $segments = explode('/', $path);
         $node = $this->_xml;
-        foreach($segments as $_key => $_segment)
-        {
-            if(!$node->$_segment->getName())
+        foreach($segments as $_key => $_segment) {
+            if(!$node->$_segment->getName()) {
                 $node->addChild($_segment);
-            
-            if($_key == count($segments) - 1)
+            }
+
+            if($_key == count($segments) - 1) {
                 $node->$_segment = $value;
+                foreach ($attributes as $_attribute => $_value) {
+                    $node->$_segment->addAttribute($_attribute, $_value);
+                }
+            }
 
             $node = $node->$_segment;
         }

@@ -49,12 +49,28 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
         // Create class file
         $this->createClass($namespace, $path, $this->_createTemplate, $module);
 
-        // Create namespace in config if not exist
-//        $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
-//        $configPath = "global/{$this->_configNamespace}/{$namespace}/class";
-//        if (!$config->get($configPath)) {
-//            $config->set($configPath, "{$module->getName()}_{$this->_entityName}");
-//        }
+        // Create router in config if not exist
+        $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
+        $area = (in_array($namespace, array('adminhtml', 'admin'))) ? 'admin' : 'frontend';
+        $controllerPath = $module->getName();
+        $params = array();
+        $moduleName = strtolower($module->getName());
+
+        if ($area == 'admin') {
+            $controllerPath .= '_Adminhtml';
+            $params = array('before' => 'Mage_Adminhtml');
+            $configPath = "{$area}/routers/adminhtml/args/modules/{$moduleName}";
+            if (!$config->get($configPath)) {
+                $config->set($configPath, $controllerPath, $params);
+            }
+        } else { //if frontend
+            $configPath = "{$area}/routers/{$moduleName}";
+            if (!$config->get($configPath . '/args/frontName')) {
+                $config->set($configPath . '/use', 'standard');
+                $config->set($configPath . '/args/module', $controllerPath);
+                $config->set($configPath . '/args/frontName', lcfirst($module->getModuleName()));
+            }
+        }
     }
 
     /**
