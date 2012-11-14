@@ -47,11 +47,11 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
     public function create($namespace, $path, Mtool_Codegen_Entity_Module $module)
     {
         // Create class file
-        $this->createClass($namespace, $path, $this->_createTemplate, $module);
+        $resultingClassName = $this->createClass($namespace, $path, $this->_createTemplate, $module);
 
         // Create router in config if not exist
         $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
-        $area = (in_array($namespace, array('adminhtml', 'admin'))) ? 'admin' : 'frontend';
+        $area = ($namespace == 'admin') ? 'admin' : 'frontend';
         $controllerPath = $module->getName();
         $params = array();
         $moduleName = strtolower($module->getName());
@@ -64,13 +64,15 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
                 $config->set($configPath, $controllerPath, $params);
             }
         } else { //if frontend
-            $configPath = "{$area}/routers/{$moduleName}";
-            if (!$config->get($configPath . '/args/frontName')) {
+            $configPath = "{$area}/routers/{$moduleName}_{$namespace}";
+            if ($config->get($configPath . '/args/frontName') != $namespace) {
                 $config->set($configPath . '/use', 'standard');
                 $config->set($configPath . '/args/module', $controllerPath);
-                $config->set($configPath . '/args/frontName', lcfirst($module->getModuleName()));
+                $config->set($configPath . '/args/frontName', $namespace);
             }
         }
+
+        return $resultingClassName;
     }
 
     /**
@@ -89,21 +91,10 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
         // * set correct abstract method
         // * update controller path if needed
 
-        $controllerAbstract = '';
-        switch ($namespace) {
-            case 'adminhtml':
-            case 'admin':
-                if (strpos($path, 'adminhtml_') !== 0) {
-                    $path = 'adminhtml_' . $path;
-                }
-                $controllerAbstract = 'Mage_Adminhtml_Controller_Action';
-                break;
-            case 'frontend':
-                $controllerAbstract = 'Mage_Core_Controller_Front_Action';
-                break;
-        }
-        if (!$controllerAbstract) {
-            throw Exception('Incorrect controller area');
+        $controllerAbstract = 'Mage_Core_Controller_Front_Action';
+        if ($namespace == 'admin') {
+            $path = 'adminhtml_' . $path;
+            $controllerAbstract = 'Mage_Adminhtml_Controller_Action';
         }
 
         $pathSteps = $this->_ucPath(explode('_', $path));

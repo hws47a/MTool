@@ -22,7 +22,7 @@
  * @package    Mtool_Providers
  * @author     Vladimir Fishchenko <vladimir@fishchenko.com>
  */
-class Mtool_Providers_Controller extends Mtool_Providers_Entity
+class Mtool_Providers_Controller extends Mtool_Providers_Abstract
 {
     /**
      * Get provider name
@@ -37,18 +37,40 @@ class Mtool_Providers_Controller extends Mtool_Providers_Entity
      * Create controller
      *
      * @param string $targetModule in format of companyname/modulename
-     * @param string $controllerPath in format of area/controller_path (Ex: frontend/help or adminhtml/manageHelp)
+     * @param string $controllerPath
      */
     public function create($targetModule = null, $controllerPath = null)
     {
-        //check for correct area
-        list($area, $entityName) = explode('/', $controllerPath);
-        if (!in_array($area, array('adminhtml', 'admin', 'frontend'))) {
-            $this->_answer('Incorrent area. Please use adminhtml or frontend');
-            return;
-        }
-
         //create controller file
         $this->_createEntity(new Mtool_Codegen_Entity_Controller(), 'controller', $targetModule, $controllerPath);
+    }
+
+    /**
+     * Create entity
+     *
+     * @param Mtool_Codegen_Entity_Controller $entity
+     * @param string $name
+     * @param string $targetModule in format of companyname/modulename
+     * @param string $entityPath in format of mymodule/model_path
+     */
+    protected function _createEntity($entity, $name, $targetModule = null, $entityPath = null)
+    {
+        if ($targetModule == null) {
+            $targetModule = $this->_ask('Enter the target module (in format of Mycompany/Mymodule)');
+        }
+        if ($entityPath == null) {
+            $entityPath = $this->_ask("Enter the {$name} path (in format of frontName/{$name}_path)");
+        }
+
+        list($companyName, $moduleName) = explode('/', $targetModule);
+
+        $module = new Mtool_Codegen_Entity_Module(getcwd(), $moduleName, $companyName, $this->_getConfig());
+
+        list($namespace, $entityName) = explode('/', $entityPath);
+
+        $result = $entity->create($namespace, $entityName, $module);
+
+        $this->_answer('Done');
+        $this->_answer('Created class: ' . $result);
     }
 }
