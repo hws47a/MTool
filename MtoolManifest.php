@@ -40,13 +40,14 @@ class MtoolManifest implements Zend_Tool_Framework_Manifest_ProviderManifestable
     public function getProviders()
     {
         return array(
+            new Mtool_Providers_Mtool(),
+            new Mtool_Providers_Module(),
             new Mtool_Providers_Block(),
-            new Mtool_Providers_Controller(),
             new Mtool_Providers_Helper(),
             new Mtool_Providers_Model(),
-            new Mtool_Providers_Module(),
-            new Mtool_Providers_Mtool(),
             new Mtool_Providers_Rmodel(),
+            new Mtool_Providers_TableEntity(),
+            new Mtool_Providers_Controller(),
         );
     }
 
