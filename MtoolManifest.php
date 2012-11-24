@@ -47,6 +47,7 @@ class MtoolManifest implements Zend_Tool_Framework_Manifest_ProviderManifestable
             new Mtool_Providers_Module(),
             new Mtool_Providers_Mtool(),
             new Mtool_Providers_Rmodel(),
+            new Mtool_Providers_Crud()
         );
     }
 
