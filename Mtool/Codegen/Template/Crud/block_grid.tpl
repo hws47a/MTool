@@ -98,7 +98,7 @@ class #{class_name} extends Mage_Adminhtml_Block_Widget_Grid
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField($this->getIdFieldName());
-        $this->getMassactionBlock()->setFormFieldName('menu');
+        $this->getMassactionBlock()->setFormFieldName('item');
 
         $this->getMassactionBlock()->addItem('delete', array(
             'label'    => $this->__('Delete'),

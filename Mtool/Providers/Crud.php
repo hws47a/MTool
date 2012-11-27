@@ -42,7 +42,41 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
      */
     public function createGridBlock($targetModule = null, $blockPath = null, $modelPath = null)
     {
-        $this->_createGridBlock($targetModule, $blockPath, $modelPath);
+        $this->_createData('createGridBlock', $targetModule, $blockPath, $modelPath);
+    }
+
+    /**
+     * Create form block
+     *
+     * @param   string  $targetModule   in format of companyname/modulename
+     * @param   string  $blockPath      in format of mymodule/block_path
+     * @param   string  $modelPath      in format of mymodule/model_path
+     */
+    public function createFormBlock($targetModule = null, $blockPath = null, $modelPath = null)
+    {
+        $this->_createData('createFormBlock', $targetModule, $blockPath, $modelPath);
+    }
+
+    /**
+     * Create form block
+     *
+     * @param   string  $targetModule   in format of companyname/modulename
+     * @param   string  $controllerPath      in format of mymodule/block_path
+     * @param   string  $modelPath      in format of mymodule/model_path
+     */
+    public function createController($targetModule = null, $controllerPath = null, $modelPath = null)
+    {
+        if ($targetModule == null) {
+            $targetModule = $this->_ask('Enter the target module (in format of Mycompany/Mymodule)');
+        }
+        if ($controllerPath == null) {
+            $entityPath = $this->_ask("Enter the controller path (in format of frontName/controller_path)");
+        }
+        if ($modelPath == null) {
+            $entityPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
+        }
+
+        $this->_createData('createController', $targetModule, $controllerPath, $modelPath);
     }
 
     /**
@@ -52,7 +86,7 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
      * @param   string  $blockPath      in format of mymodule/block_path
      * @param   string  $modelPath      in format of mymodule/model_path
      */
-    protected function _createGridBlock($targetModule = null, $blockPath = null, $modelPath = null)
+    protected function _createData($action, $targetModule = null, $blockPath = null, $modelPath = null)
     {
         $entity = new Mtool_Codegen_Entity_Crud();
 
@@ -74,7 +108,7 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
 
         list($modelNS, $modelName) = explode('/', $modelPath);
 
-        $entity->createGridBlock($module, $blockNS, $blockName, $modelNS, $modelName);
+        $entity->$action($module, $blockNS, $blockName, $modelNS, $modelName);
 
         $this->_answer('Done');
     }

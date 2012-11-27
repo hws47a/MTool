@@ -142,7 +142,7 @@ abstract class Mtool_Codegen_Entity_Abstract
      * @param string $template 
      * @param Mtool_Codegen_Entity_Module $module
      * @param array $params 
-     * @return resulting class name
+     * @return string resulting class name
      */
     public function createClass($path, $template, $module, $params = array())
     {
