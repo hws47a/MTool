@@ -28,19 +28,34 @@
  *
  * @category   #{company_name}
  * @package    #{company_name}_#{module_name}
- * @subpackage Model
+ * @subpackage Block
  * @author     #{author}
  */
-class #{class_name} extends Mage_Core_Model_Abstract
+class #{class_name} extends Mage_Adminhtml_Block_Widget_Form_Container
 {
     /**
-     * Init the resource
-     *
-     * @return void
+     * Init grid container
      */
-    public function _construct()
+    public function __construct()
     {
-        parent::_construct();
-        $this->_init('#{namespace}/#{model_path}');
+        parent::__construct();
+        $this->_objectId = 'id';
+        $this->_controller = '#{block_path}';
+        $this->_blockGroup = '#{block_ns}';
+    }
+
+    /**
+     * Get container header text
+     *
+     * @return string
+     */
+    public function getHeaderText()
+    {
+        $data = Mage::registry('current_#{model_ns}_#{model_path}');
+        if ($data) {
+            return $this->__('Edit Item #%d', $this->escapeHtml($data->getId()));
+        } else {
+            return $this->__('New Item');
+        }
     }
 }

@@ -44,10 +44,13 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
      * @param string $path
      * @param Mtool_Codegen_Entity_Module $module
      */
-    public function create($namespace, $path, Mtool_Codegen_Entity_Module $module)
+    public function create($namespace, $path, Mtool_Codegen_Entity_Module $module, $template = null, $param = array())
     {
+        if (!$template) {
+            $template = $this->_createTemplate;
+        }
         // Create class file
-        $resultingClassName = $this->createClass($namespace, $path, $this->_createTemplate, $module);
+        $resultingClassName = $this->createClass($namespace, $path, $template, $module, $param);
 
         // Create router in config if not exist
         $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));

@@ -28,19 +28,19 @@
  *
  * @category   #{company_name}
  * @package    #{company_name}_#{module_name}
- * @subpackage Model
+ * @subpackage Block
  * @author     #{author}
  */
-class #{class_name} extends Mage_Core_Model_Abstract
+class #{class_name} extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
     /**
-     * Init the resource
-     *
-     * @return void
+     * Init grid container
      */
-    public function _construct()
+    public function __construct()
     {
-        parent::_construct();
-        $this->_init('#{namespace}/#{model_path}');
+        parent::__construct();
+        $this->_controller = '#{block_path}';
+        $this->_blockGroup = '#{block_ns}';
+        $this->_headerText = $this->__('#{header_text}');
     }
 }

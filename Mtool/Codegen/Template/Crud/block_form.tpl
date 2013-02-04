@@ -28,19 +28,38 @@
  *
  * @category   #{company_name}
  * @package    #{company_name}_#{module_name}
- * @subpackage Model
+ * @subpackage Block
  * @author     #{author}
  */
-class #{class_name} extends Mage_Core_Model_Abstract
+class #{class_name} extends Mage_Adminhtml_Block_Widget_Form
 {
     /**
-     * Init the resource
+     * Prepare the form
      *
-     * @return void
+     * @return Mage_Adminhtml_Block_Widget_Form|void
      */
-    public function _construct()
+    protected function _prepareForm()
     {
-        parent::_construct();
-        $this->_init('#{namespace}/#{model_path}');
+        //add form
+        $form = new Varien_Data_Form(array(
+            'id' => 'edit_form',
+            'action' => $this->getUrl('*/*/save', array('id' => $this->getRequest()->getParam('id', null))),
+            'method' => 'post'
+        ));
+        $form->setUseContainer(true);
+        $this->setForm($form);
+
+        //add fieldset
+        $fieldSet = $form->addFieldset(
+            'main_field_set',
+            array('legend' => $this->__('Main Content'))
+        );
+
+        $data = Mage::registry('current_#{model_ns}_#{model_path}');
+        if ($data) {
+            $form->setValues($data->getData());
+        }
+
+        parent::_prepareForm();
     }
 }
