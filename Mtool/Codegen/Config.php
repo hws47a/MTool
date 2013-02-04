@@ -59,6 +59,16 @@ class Mtool_Codegen_Config
     }
 
     /**
+     * Get xml config
+     *
+     * @return SimpleXMLElement
+     */
+    public function getXml()
+    {
+        return $this->_xml;
+    }
+
+    /**
      * Set config value
      *
      * @param string $path separated by slash (/)
