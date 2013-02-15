@@ -34,6 +34,33 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
     }
 
     /**
+     * @param string $targetModule      in format of CompanyName/ModuleName
+     * @param string $controllerPath    in format of frontName/controller_path
+     * @param string $modelPath         in format of model_namespace/model_path
+     * @param string $blockPath         in format of block_namespace/block_path
+     */
+    public function create($targetModule = null, $controllerPath = null, $modelPath = null, $blockPath = null)
+    {
+        if ($targetModule == null) {
+            $targetModule = $this->_ask('Enter the target module (in format of Mycompany/Mymodule)');
+        }
+        if ($controllerPath == null) {
+            $controllerPath = $this->_ask("Enter the controller path (in format of frontName/controller_path)");
+        }
+        if ($modelPath == null) {
+            $modelPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
+        }
+        if ($blockPath == null) {
+            $modelPathParts = explode('/', $modelPath);
+            $blockPath = 'adminhtml/' . $modelPathParts[1];
+        }
+
+        $this->createController($targetModule, $controllerPath, $modelPath);
+        $this->createGridBlock($targetModule, $blockPath, $modelPath);
+        $this->createFormBlock($targetModule, $blockPath, $modelPath);
+    }
+
+    /**
      * Create grid block
      *
      * @param   string  $targetModule   in format of companyname/modulename
@@ -70,10 +97,10 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
             $targetModule = $this->_ask('Enter the target module (in format of Mycompany/Mymodule)');
         }
         if ($controllerPath == null) {
-            $entityPath = $this->_ask("Enter the controller path (in format of frontName/controller_path)");
+            $controllerPath = $this->_ask("Enter the controller path (in format of frontName/controller_path)");
         }
         if ($modelPath == null) {
-            $entityPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
+            $modelPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
         }
 
         $this->_createData('createController', $targetModule, $controllerPath, $modelPath);
@@ -94,10 +121,10 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
             $targetModule = $this->_ask('Enter the target module (in format of Mycompany/Mymodule)');
         }
         if ($blockPath == null) {
-            $entityPath = $this->_ask("Enter the block path (in format of mymodule/block_path)");
+            $blockPath = $this->_ask("Enter the block path (in format of mymodule/block_path)");
         }
         if ($modelPath == null) {
-            $entityPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
+            $modelPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
         }
 
         list($companyName, $moduleName) = explode('/', $targetModule);
@@ -110,6 +137,6 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
 
         $entity->$action($module, $blockNS, $blockName, $modelNS, $modelName);
 
-        $this->_answer('Done');
+        $this->_answer($action . ":\t" . 'Done');
     }
 }
