@@ -51,8 +51,7 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
             $modelPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
         }
         if ($blockPath == null) {
-            $modelPathParts = explode('/', $modelPath);
-            $blockPath = 'adminhtml/' . $modelPathParts[1];
+            $blockPath = $this->_ask("Enter the block path (in format of mymodule/block_path)");
         }
 
         $this->createController($targetModule, $controllerPath, $modelPath);
