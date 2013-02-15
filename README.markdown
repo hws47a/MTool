@@ -7,7 +7,9 @@ Mtool is a magento code-genarator which should help magento-developers with thei
   
 `zf create mage-module Namespace/ModuleName`
   
-Will create all needed paths, files and configs.
+Will create all needed paths, files and configs.  
+  
+Or see how to create a custom module with CRUD using MTool [here](https://github.com/hws47a/MTool/wiki/Example)
 
 My Fork Information
 =======
