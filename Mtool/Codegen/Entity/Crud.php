@@ -99,9 +99,11 @@ class Mtool_Codegen_Entity_Crud extends Mtool_Codegen_Entity_Abstract
     /**
      * Create new entity
      *
-     * @param string $namespace
-     * @param string $path
      * @param Mtool_Codegen_Entity_Module $module
+     * @param string                      $blockNS
+     * @param string                      $blockName
+     * @param string                      $modelNS
+     * @param string                      $modelName
      */
     public function createGridBlock(Mtool_Codegen_Entity_Module $module, $blockNS, $blockName, $modelNS, $modelName)
     {
@@ -135,9 +137,11 @@ class Mtool_Codegen_Entity_Crud extends Mtool_Codegen_Entity_Abstract
     /**
      * Create new entity
      *
-     * @param string $namespace
-     * @param string $path
      * @param Mtool_Codegen_Entity_Module $module
+     * @param string                      $blockNS
+     * @param string                      $blockName
+     * @param string                      $modelNS
+     * @param string                      $modelName
      */
     public function createFormBlock(Mtool_Codegen_Entity_Module $module, $blockNS, $blockName, $modelNS, $modelName)
     {
@@ -170,9 +174,11 @@ class Mtool_Codegen_Entity_Crud extends Mtool_Codegen_Entity_Abstract
     /**
      * Create new entity
      *
-     * @param string $namespace
-     * @param string $path
      * @param Mtool_Codegen_Entity_Module $module
+     * @param string                      $controllerNS
+     * @param string                      $controllerName
+     * @param string                      $modelNS
+     * @param string                      $modelName
      */
     public function createController(Mtool_Codegen_Entity_Module $module, $controllerNS, $controllerName, $modelNS, $modelName)
     {
@@ -194,6 +200,13 @@ class Mtool_Codegen_Entity_Crud extends Mtool_Codegen_Entity_Abstract
         );
     }
 
+    /**
+     * Create namespaces for block and model
+     *
+     * @param Mtool_Codegen_Entity_Module $module
+     * @param string                      $blockNS
+     * @param string                      $modelNS
+     */
     protected function _createNamespaces(Mtool_Codegen_Entity_Module $module, $blockNS, $modelNS)
     {
         // Create block namespace in config if not exist
@@ -209,5 +222,48 @@ class Mtool_Codegen_Entity_Crud extends Mtool_Codegen_Entity_Abstract
         if (!$config->get($configPath)) {
             $config->set($configPath, "{$module->getName()}_{$this->_modelEntityName}");
         }
+    }
+
+    /**
+     * @param Mtool_Codegen_Entity_Module $module
+     * @param string                      $controller like adminhtml_catalog_product
+     * @param string                      $entityName like catalog_product
+     * @param string                      $blockPath  like adminhtml/catalog_product
+     */
+    public function addCrudLayout(Mtool_Codegen_Entity_Module $module, $controller, $entityName, $blockPath)
+    {
+        $configNamespace = 'adminhtml';
+
+        //add layout file
+        $entity = new Mtool_Codegen_Entity_Design();
+        $entity->addLayout($module, $configNamespace);
+
+        //add data to layout
+        $layout = new Mtool_Codegen_Config($entity->getLayoutFilePath($module, $configNamespace));
+        if (!$layout->getXml()->xpath($controller . '_index')) {
+            $controllerXml = $layout->getXml()->addChild($controller . '_index');
+            $reference = $controllerXml->addChild('reference');
+            $reference->addAttribute('name', 'content');
+            $block = $reference->addChild('block');
+            $block->addAttribute('name', $entityName);
+            $block->addAttribute('type', $blockPath);
+        }
+        if (!$layout->getXml()->xpath($controller . '_grid')) {
+            $controllerXml = $layout->getXml()->addChild($controller . '_grid');
+            $controllerXml->addChild('remove')->addAttribute('name', 'root');
+            $block = $controllerXml->addChild('block');
+            $block->addAttribute('name', $entityName . '.grid');
+            $block->addAttribute('type', $blockPath . '_grid');
+            $block->addAttribute('output', 'toHtml');
+        }
+        if (!$layout->getXml()->xpath($controller . '_edit')) {
+            $controllerXml = $layout->getXml()->addChild($controller . '_edit');
+            $reference = $controllerXml->addChild('reference');
+            $reference->addAttribute('name', 'content');
+            $block = $reference->addChild('block');
+            $block->addAttribute('name', $entityName . '.edit');
+            $block->addAttribute('type', $blockPath . '_edit');
+        }
+        $layout->save();
     }
 }

@@ -56,6 +56,42 @@ class Mtool_Magento
     }
 
     /**
+     * Get Magento Design Adminhtml Theme Path
+     *
+     * @param string $package
+     * @param string $theme
+     *
+     * @return string
+     */
+    public function getDesignAdminhtmlPath($package = 'default', $theme = 'default')
+    {
+        return $this->_root . 'app' .
+            DIRECTORY_SEPARATOR . 'design' .
+            DIRECTORY_SEPARATOR . 'adminhtml' .
+            DIRECTORY_SEPARATOR . $package .
+            DIRECTORY_SEPARATOR . $theme .
+            DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Get Magento Design Frontend Theme Path
+     *
+     * @param string $package
+     * @param string $theme
+     *
+     * @return string
+     */
+    public function getDesignFrontendPath($package = 'base', $theme = 'default')
+    {
+        return $this->_root . 'app' .
+            DIRECTORY_SEPARATOR . 'design' .
+            DIRECTORY_SEPARATOR . 'frontend' .
+            DIRECTORY_SEPARATOR . $package .
+            DIRECTORY_SEPARATOR . $theme .
+            DIRECTORY_SEPARATOR;
+    }
+
+    /**
      * Get Magento modules config path
      *
      * @param string $pool (local/community)
