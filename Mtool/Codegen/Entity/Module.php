@@ -102,6 +102,16 @@ class Mtool_Codegen_Entity_Module extends Mtool_Codegen_Entity_Abstract
     }
 
     /**
+     * Get Magento
+     *
+     * @return Mtool_Magento
+     */
+    public function getMage()
+    {
+        return $this->_mage;
+    }
+
+    /**
      * Create dummy module:
      *     1. create module folder under app/code/local
      *     2. create module config.xml file

@@ -57,6 +57,7 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
         $this->createController($targetModule, $controllerPath, $modelPath);
         $this->createGridBlock($targetModule, $blockPath, $modelPath);
         $this->createFormBlock($targetModule, $blockPath, $modelPath);
+        $this->_addLayout($targetModule, $controllerPath, $modelPath, $blockPath);
     }
 
     /**
@@ -106,11 +107,38 @@ class Mtool_Providers_Crud extends Mtool_Providers_Abstract
     }
 
     /**
+     * Add layout for crud
+     *
+     * @param string $targetModule
+     * @param string $controllerPath
+     * @param string $modelPath
+     * @param string $blockPath
+     */
+    protected function _addLayout($targetModule = null, $controllerPath = null, $modelPath = null, $blockPath = null)
+    {
+        $entity = new Mtool_Codegen_Entity_Crud();
+        list($companyName, $moduleName) = explode('/', $targetModule);
+        $module = new Mtool_Codegen_Entity_Module(getcwd(), $moduleName, $companyName, $this->_getConfig());
+
+        $controllerPathParts = explode('/', $controllerPath);
+        $controller = (($controllerPathParts[0] == 'admin') ? 'adminhtml' : strtolower($controllerPathParts[0]))
+            . '_' . strtolower($controllerPathParts[1]);
+
+        $modelPathParts = explode('/', $modelPath);
+
+        $entity->addCrudLayout($module, $controller, $modelPathParts[1], $blockPath);
+        $this->_answer("Add Layout:\t\t" . 'Done');
+    }
+
+    /**
      * Create entity
      *
+     * @param   string  $action
      * @param   string  $targetModule   in format of companyname/modulename
      * @param   string  $blockPath      in format of mymodule/block_path
      * @param   string  $modelPath      in format of mymodule/model_path
+     *
+     * @return void
      */
     protected function _createData($action, $targetModule = null, $blockPath = null, $modelPath = null)
     {
