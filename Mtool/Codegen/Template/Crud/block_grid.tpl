@@ -76,6 +76,8 @@ class #{class_name} extends Mage_Adminhtml_Block_Widget_Grid
             'index'     =>  $this->getIdFieldName()
         ));
 
+        //ADD COLUMNS HERE
+
         return parent::_prepareColumns();
     }
 

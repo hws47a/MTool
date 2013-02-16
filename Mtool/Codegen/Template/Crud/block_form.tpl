@@ -55,6 +55,8 @@ class #{class_name} extends Mage_Adminhtml_Block_Widget_Form
             array('legend' => $this->__('Main Content'))
         );
 
+        //ADD FIELDS HERE
+
         $data = Mage::registry('current_#{model_ns}_#{model_path}');
         if ($data) {
             $form->setValues($data->getData());
