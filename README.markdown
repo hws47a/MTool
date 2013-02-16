@@ -23,8 +23,8 @@ Currently all changes is unstable and to use it you will need to switch to [deve
 Added:  
 * `create mage-controller` - create controller by url path, `admin/examlple` creates admin controller, `example/index` - frontend
 * `create mage-table-entity` - create model / resource model / collection files and config data
-* `create mage-crud` - create controller, grid and edit data files
-* `mage-desing` - can add layouts for adminhtml and frontend
+* `create mage-crud` - create controller, grid and edit data files, add needed data to layout
+* `add-admin-layout mage-design` and `add-frontend-layout mage-design` - can add layouts for adminhtml and frontend
 
 Fixed:  
 * correct installer path when upgrade mage-module
