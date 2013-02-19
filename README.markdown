@@ -28,6 +28,7 @@ Added:
 
 Fixed:  
 * correct installer path when upgrade mage-module
+* do not rewrite existed data
   
 ### Documentation
 
