@@ -38,12 +38,11 @@ class Mtool_Providers_TableEntity extends Mtool_Providers_Abstract
      *
      * @param string $targetModule in format of companyname/modulename
      * @param string $entityPath in format of mymodule/model_path
-     * @param string $yourEntityName model entity
      * @param string $addTableName table name
      */
-    public function create($targetModule = null, $entityPath = null, $yourEntityName = null, $addTableName = null)
+    public function create($targetModule = null, $entityPath = null, $addTableName = null)
     {
-        $this->_createEntity($targetModule, $entityPath, $yourEntityName, $addTableName);
+        $this->_createEntity($targetModule, $entityPath, $addTableName);
     }
 
     /**
@@ -51,20 +50,16 @@ class Mtool_Providers_TableEntity extends Mtool_Providers_Abstract
      *
      * @param string $targetModule in format of companyname/modulename
      * @param null   $entityPath
-     * @param string $entityName   - model entity
      * @param string $tableName    - table name
      */
-    protected function _createEntity($targetModule = null, $entityPath = null, $entityTableName = null, $tableName = null)
+    protected function _createEntity($targetModule = null, $entityPath = null, $tableName = null)
     {
         $entity = new Mtool_Codegen_Entity_TableEntity();
         if ($targetModule == null) {
             $targetModule = $this->_ask('Enter the target module (in format of Mycompany/Mymodule)');
         }
         if ($entityPath == null) {
-            $entityPath = $this->_ask("Enter the module path (in format of mymodule/module_path)");
-        }
-        if ($entityTableName == null) {
-            $entityTableName = $this->_ask("Enter the entity name");
+            $entityPath = $this->_ask("Enter the model path (in format of mymodule/model_path)");
         }
         if ($tableName == null) {
             $tableName = $this->_ask("Enter the table name");
@@ -76,7 +71,7 @@ class Mtool_Providers_TableEntity extends Mtool_Providers_Abstract
 
         list($namespace, $entityName) = explode('/', $entityPath);
 
-        $entity->create($namespace, $entityName, $module, $entityTableName, $tableName);
+        $entity->create($namespace, $entityName, $module, $entityName, $tableName);
 
         $this->_answer('Done');
     }
