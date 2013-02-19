@@ -72,11 +72,16 @@ abstract class Mtool_Codegen_Entity_Abstract
      * @param string $namespace 
      * @param string $path 
      * @param Mtool_Codegen_Entity_Module $module
+     *
+     * @return string
      */
     public function create($namespace, $path, Mtool_Codegen_Entity_Module $module)
     {
         // Create class file
-        $this->createClass($path, $this->_createTemplate, $module);
+        $className = $this->createClass($path, $this->_createTemplate, $module);
+        if (!$className) {
+            return '';
+        }
 
         // Create namespace in config if not exist
         $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
@@ -84,6 +89,8 @@ abstract class Mtool_Codegen_Entity_Abstract
         if (!$config->get($configPath)) {
             $config->set($configPath, "{$module->getName()}_{$this->_entityName}");
         }
+
+        return $className;
     }
 
     /**
@@ -107,9 +114,13 @@ abstract class Mtool_Codegen_Entity_Abstract
         );
         $className = $this->createClass($path, $this->_rewriteTemplate, $module, $params);
 
-        //Register rewrite in config
-        $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
-        $config->set("global/{$this->_configNamespace}/{$originNamespace}/rewrite/{$originPath}", $className);
+        if ($className) {
+            //Register rewrite in config
+            $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
+            $config->set("global/{$this->_configNamespace}/{$originNamespace}/rewrite/{$originPath}", $className);
+        }
+
+        return $className;
     }
 
     /**
@@ -141,7 +152,8 @@ abstract class Mtool_Codegen_Entity_Abstract
      * @param string $path in format: class_path_string 
      * @param string $template 
      * @param Mtool_Codegen_Entity_Module $module
-     * @param array $params 
+     * @param array $params
+     *
      * @return string resulting class name
      */
     public function createClass($path, $template, $module, $params = array())
@@ -155,6 +167,10 @@ abstract class Mtool_Codegen_Entity_Abstract
                 DIRECTORY_SEPARATOR .
                 implode(DIRECTORY_SEPARATOR, $pathSteps);
         Mtool_Codegen_Filesystem::mkdir($classDir);
+
+        if (Mtool_Codegen_Filesystem::exists($classDir . DIRECTORY_SEPARATOR . $classFilename)) {
+            return '';
+        }
 
         // Move class template file
         $classTemplate = new Mtool_Codegen_Template($template);

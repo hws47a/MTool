@@ -71,8 +71,14 @@ class Mtool_Providers_TableEntity extends Mtool_Providers_Abstract
 
         list($namespace, $entityName) = explode('/', $entityPath);
 
-        $entity->create($namespace, $entityName, $module, $entityName, $tableName);
+        $errors = $entity->create($namespace, $entityName, $module, $entityName, $tableName);
 
-        $this->_answer('Done');
+        if (empty($errors)) {
+            $this->_answer('Done');
+        } else {
+            foreach ($errors as $_error) {
+                $this->_answer($_error);
+            }
+        }
     }
 }

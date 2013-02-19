@@ -74,9 +74,15 @@ class Mtool_Codegen_Entity_TableEntity extends Mtool_Codegen_Entity_Abstract
      * @param string $namespace
      * @param string $path
      * @param Mtool_Codegen_Entity_Module $module
+     * @param string $entityName
+     * @param string $tableName
+     *
+     * @return array errors
      */
     public function create($namespace, $path, Mtool_Codegen_Entity_Module $module, $entityName, $tableName)
     {
+        $errors = array();
+
         // Create namespace in config if not exist
         $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
         $configPath = "global/{$this->_configNamespace}/{$namespace}/class";
@@ -102,7 +108,10 @@ class Mtool_Codegen_Entity_TableEntity extends Mtool_Codegen_Entity_Abstract
 
         // Create model file
         $template = $this->_templatePath . DIRECTORY_SEPARATOR . $this->_modelTemplate;
-        $this->createClass($path, $template, $module, array('namespace' => $namespace, 'model_path' => $path));
+        $res = $this->createClass($path, $template, $module, array('namespace' => $namespace, 'model_path' => $path));
+        if (!$res) {
+            $errors[] = "Model already exists";
+        }
 
         // Create resource model file
         $resourcePrefix = $config->get($resourceConfigPath);
@@ -110,12 +119,20 @@ class Mtool_Codegen_Entity_TableEntity extends Mtool_Codegen_Entity_Abstract
         $resourcePrefix = strtolower($resourcePrefix) . '_';
 
         $template = $this->_templatePath . DIRECTORY_SEPARATOR . $this->_rModelTemplate;
-        $this->createClass($resourcePrefix . $path, $template, $module,
+        $res = $this->createClass($resourcePrefix . $path, $template, $module,
             array('namespace' => $namespace, 'entity' => $entityName));
+        if (!$res) {
+            $errors[] = "Resource model already exists";
+        }
 
         // Create collection file
         $template = $this->_templatePath . DIRECTORY_SEPARATOR . $this->_collectionTemplate;
-        $this->createClass($resourcePrefix . $path . '_collection', $template, $module,
+        $res = $this->createClass($resourcePrefix . $path . '_collection', $template, $module,
             array('namespace' => $namespace, 'model_path' => $path));
+        if (!$res) {
+            $errors[] = "Collection already exists";
+        }
+
+        return $errors;
     }
 }

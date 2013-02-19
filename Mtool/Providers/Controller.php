@@ -70,7 +70,11 @@ class Mtool_Providers_Controller extends Mtool_Providers_Abstract
 
         $result = $entity->create($namespace, $entityName, $module);
 
-        $this->_answer('Done');
-        $this->_answer('Created class: ' . $result);
+        if ($result) {
+            $this->_answer('Done');
+            $this->_answer('Created class: ' . $result);
+        } else {
+            $this->_answer('Controller already exists');
+        }
     }
 }

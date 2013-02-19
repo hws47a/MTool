@@ -47,9 +47,14 @@ class Mtool_Providers_Entity extends Mtool_Providers_Abstract
 
         list($namespace, $entityName) = explode('/', $entityPath);
 
-        $entity->create($namespace, $entityName, $module);
+        $result = $entity->create($namespace, $entityName, $module);
 
-        $this->_answer('Done');
+        if ($result) {
+            $this->_answer('Done');
+            $this->_answer('Created class: ' . $result);
+        } else {
+            $this->_answer(ucfirst($name) . ' already exists');
+        }
     }
 
     /**
@@ -73,8 +78,12 @@ class Mtool_Providers_Entity extends Mtool_Providers_Abstract
             $module = new Mtool_Codegen_Entity_Module(getcwd(), $moduleName, $companyName, $this->_getConfig());
         }
 
-        $entity->create($namespace, $entityName, $module);
-        $this->_answer("New {$name} created under {$module->getName()} module");
+        $result = $entity->create($namespace, $entityName, $module);
+        if ($result) {
+            $this->_answer("New {$name} created under {$module->getName()} module");
+        } else {
+            $this->_answer(ucfirst($name) . ' already exists');
+        }
     }
 
     /**
