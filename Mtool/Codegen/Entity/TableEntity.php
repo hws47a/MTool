@@ -92,16 +92,17 @@ class Mtool_Codegen_Entity_TableEntity extends Mtool_Codegen_Entity_Abstract
 
         //Create resource model namespace in config if not exist
         $configPath = "global/{$this->_configNamespace}/{$namespace}/resourceModel";
-        if (!$config->get($configPath)) {
-            $config->set($configPath, "{$namespace}_resource");
+        $resourceNamespace = $config->get($configPath);
+        if (!$resourceNamespace) {
+            $resourceNamespace = "{$namespace}_resource";
+            $config->set($configPath, $resourceNamespace);
         }
-        $resourceConfigPath = "global/{$this->_configNamespace}/{$namespace}_resource/class";
+        $resourceConfigPath = "global/{$this->_configNamespace}/{$resourceNamespace}/class";
         if (!$config->get($resourceConfigPath)) {
             $config->set($resourceConfigPath, "{$module->getName()}_{$this->_entityName}_Resource");
         }
 
         //Create table entity
-        $resourceNamespace = $config->get($configPath);
         $configPath = "global/{$this->_configNamespace}/{$resourceNamespace}/entities/{$entityName}/table";
         $config->set($configPath, $tableName);
 
