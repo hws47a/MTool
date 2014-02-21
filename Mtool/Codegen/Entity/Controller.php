@@ -50,7 +50,7 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
             $template = $this->_createTemplate;
         }
         // Create class file
-        $resultingClassName = $this->createClass($namespace, $path, $template, $module, $param);
+        $resultingClassName = $this->createClass($path, $template, $module, $param, $namespace);
 
         // Create router in config if not exist
         $config = new Mtool_Codegen_Config($module->getConfigPath('config.xml'));
@@ -89,8 +89,11 @@ class Mtool_Codegen_Entity_Controller extends Mtool_Codegen_Entity_Abstract
      *
      * @return string resulting class name
      */
-    public function createClass($namespace, $path, $template, $module, $params = array())
+    public function createClass($path, $template, $module, $params = array())
     {
+        //load from function to compatible with abstract class
+        $namespace = func_get_arg(4);
+
         //check controller namespace to
         // * set correct abstract method
         // * update controller path if needed
