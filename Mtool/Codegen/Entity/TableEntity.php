@@ -79,8 +79,12 @@ class Mtool_Codegen_Entity_TableEntity extends Mtool_Codegen_Entity_Abstract
      *
      * @return array errors
      */
-    public function create($namespace, $path, Mtool_Codegen_Entity_Module $module, $entityName, $tableName)
+    public function create($namespace, $path, Mtool_Codegen_Entity_Module $module)
     {
+        //load from function to compatible with abstract class
+        $entityName = func_get_arg(3);
+        $tableName = func_get_arg(4);
+
         $errors = array();
 
         // Create namespace in config if not exist
