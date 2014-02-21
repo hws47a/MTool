@@ -102,6 +102,16 @@ class Mtool_Codegen_Entity_Module extends Mtool_Codegen_Entity_Abstract
     }
 
     /**
+     * Get Magento
+     *
+     * @return Mtool_Magento
+     */
+    public function getMage()
+    {
+        return $this->_mage;
+    }
+
+    /**
      * Create dummy module:
      *     1. create module folder under app/code/local
      *     2. create module config.xml file
@@ -216,6 +226,13 @@ class Mtool_Codegen_Entity_Module extends Mtool_Codegen_Entity_Abstract
 
         // Create upgrade file
         $setupNamspace = strtolower($this->getName()) . '_setup';
+        if (!$config->get("global/resources/{$setupNamspace}")) {
+            $xml = $config->getXml()->xpath("global/resources/*/setup/module[text() = '{$this->getName()}']/../..");
+            if (count($xml)) {
+                $setupNamspace = $xml[0]->getName();
+            }
+        }
+
         $modulesTemplate = new Mtool_Codegen_Template('module_upgrader');
 
         $params = array(

@@ -38,24 +38,37 @@ class Mtool_Codegen_Config
 
     /**
      * Load config
-     * @param string $filepath
+     *
+     * @param string $filePath
+     *
+     * @throws Mtool_Codegen_Exception_Config
      */
-    public function __construct($filepath)
+    public function __construct($filePath)
     {
         libxml_use_internal_errors(true);
-        if(!Mtool_Codegen_Filesystem::exists($filepath))
-            throw new Mtool_Codegen_Exception_Config("Config file does not exist: {$filepath}");
+        if(!Mtool_Codegen_Filesystem::exists($filePath))
+            throw new Mtool_Codegen_Exception_Config("Config file does not exist: {$filePath}");
 
-        $this->_xml = simplexml_load_file($filepath);
+        $this->_xml = simplexml_load_file($filePath);
         if($this->_xml === false)
         {
-            $message = "Cannot load config file: {$filepath}";
+            $message = "Cannot load config file: {$filePath}";
             foreach(libxml_get_errors() as $_error)
                 $message .= "; {$_error->message}";
             throw new Mtool_Codegen_Exception_Config($message);
         }
 
-        $this->_path = $filepath;
+        $this->_path = $filePath;
+    }
+
+    /**
+     * Get xml config
+     *
+     * @return SimpleXMLElement
+     */
+    public function getXml()
+    {
+        return $this->_xml;
     }
 
     /**
@@ -63,23 +76,30 @@ class Mtool_Codegen_Config
      *
      * @param string $path separated by slash (/)
      * @param string $value
+     * @param array $attributes
+     *
+     * @return Mtool_Codegen_Config
      */
-    public function set($path, $value)
+    public function set($path, $value, $attributes = array())
     {
         $segments = explode('/', $path);
         $node = $this->_xml;
-        foreach($segments as $_key => $_segment)
-        {
-            if(!$node->$_segment->getName())
+        foreach($segments as $_key => $_segment) {
+            if(!$node->$_segment->getName()) {
                 $node->addChild($_segment);
-            
-            if($_key == count($segments) - 1)
+            }
+
+            if($_key == count($segments) - 1) {
                 $node->$_segment = $value;
+                foreach ($attributes as $_attribute => $_value) {
+                    $node->$_segment->addAttribute($_attribute, $_value);
+                }
+            }
 
             $node = $node->$_segment;
         }
 
-        Mtool_Codegen_Filesystem::write($this->_path, $this->asPrettyXML());
+        return $this->save();
     }
 
     /**
@@ -138,5 +158,17 @@ class Mtool_Codegen_Config
                 $node = $node->$_segment;
 
         return (string) trim($node);
+    }
+
+    /**
+     * Save xml data
+     *
+     * @return Mtool_Codegen_Config
+     */
+    public function save()
+    {
+        Mtool_Codegen_Filesystem::write($this->_path, $this->asPrettyXML());
+
+        return $this;
     }
 }
