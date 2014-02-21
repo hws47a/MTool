@@ -251,10 +251,16 @@ class Mtool_Codegen_Entity_Crud extends Mtool_Codegen_Entity_Abstract
         if (!$layout->getXml()->xpath($controller . '_grid')) {
             $controllerXml = $layout->getXml()->addChild($controller . '_grid');
             $controllerXml->addChild('remove')->addAttribute('name', 'root');
+
             $block = $controllerXml->addChild('block');
             $block->addAttribute('name', $entityName . '.grid');
             $block->addAttribute('type', $blockPath . '_grid');
             $block->addAttribute('output', 'toHtml');
+
+            $formKey = $controllerXml->addChild('block');
+            $formKey->addAttribute('name', 'formkey');
+            $formKey->addAttribute('type', 'core/template');
+            $formKey->addAttribute('template', 'formkey.phtml');
         }
         if (!$layout->getXml()->xpath($controller . '_edit')) {
             $controllerXml = $layout->getXml()->addChild($controller . '_edit');
