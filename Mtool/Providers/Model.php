@@ -39,18 +39,30 @@ class Mtool_Providers_Model extends Mtool_Providers_Entity
      * @param string $targetModule in format of companyname/modulename
      * @param string $modelPath in format of mymodule/model_path
      */
-    public function create($targetModule = null, $modelPath = null)
+    public function create($targetModule = null, $modelPath = null, $withTest = false)
     {
         $this->_createEntity(new Mtool_Codegen_Entity_Model(), 'model', $targetModule, $modelPath);
+
+        if ($withTest && class_exists('Mtool_Providers_Test')) {
+            $testProvider = new Mtool_Providers_Test();
+            $testProvider->setRegistry($this->_registry);
+            $testProvider->add('model', $modelPath);
+        }
     }
 
     /**
      * Create new model with module auto-guessing
      * @param string $modelPath in format of mymodule/model_path
      */
-    public function add($modelPath = null)
+    public function add($modelPath = null, $withTest = false)
     {
         $this->_createEntityWithAutoguess(new Mtool_Codegen_Entity_Model(), 'model', $modelPath);
+
+        if ($withTest && class_exists('Mtool_Providers_Test')) {
+            $testProvider = new Mtool_Providers_Test();
+            $testProvider->setRegistry($this->_registry);
+            $testProvider->add('model', $modelPath);
+        }
     }
 
     /**

@@ -39,18 +39,28 @@ class Mtool_Providers_Block extends Mtool_Providers_Entity
      * @param string $targetModule in format of companyname/modulename
      * @param string $blockPath in format of mymodule/block_path
      */
-    public function create($targetModule = null, $blockPath = null)
+    public function create($targetModule = null, $blockPath = null, $withTest = false)
     {
         $this->_createEntity(new Mtool_Codegen_Entity_Block(), 'block', $targetModule, $blockPath);
+        if ($withTest && class_exists('Mtool_Providers_Test')) {
+            $testProvider = new Mtool_Providers_Test();
+            $testProvider->setRegistry($this->_registry);
+            $testProvider->add('block', $blockPath);
+        }
     }
 
     /**
      * Create new block with module auto-guessing
      * @param string $blockPath in format of mymodule/block_path
      */
-    public function add($blockPath = null)
+    public function add($blockPath = null, $withTest = false)
     {
         $this->_createEntityWithAutoguess(new Mtool_Codegen_Entity_Block(), 'block', $blockPath);
+        if ($withTest && class_exists('Mtool_Providers_Test')) {
+            $testProvider = new Mtool_Providers_Test();
+            $testProvider->setRegistry($this->_registry);
+            $testProvider->add('block', $blockPath);
+        }
     }
 
     /**

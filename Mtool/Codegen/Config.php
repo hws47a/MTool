@@ -150,6 +150,22 @@ class Mtool_Codegen_Config
      * @param string $path
      * @return string
      */
+    public function has($path)
+    {
+        $node = $this->_xml;
+        foreach(explode('/', $path) as $_segment)
+            if($node->$_segment)
+                $node = $node->$_segment;
+
+        return (bool)$node;
+    }
+
+    /**
+     * Read the config value
+     *
+     * @param string $path
+     * @return string
+     */
     public function get($path)
     {
         $node = $this->_xml;

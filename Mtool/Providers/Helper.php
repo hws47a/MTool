@@ -39,18 +39,30 @@ class Mtool_Providers_Helper extends Mtool_Providers_Entity
      * @param string $targetModule in format of companyname/modulename
      * @param string $helperPath in format of mymodule/helper_path
      */
-    public function create($targetModule = null, $helperPath = null)
+    public function create($targetModule = null, $helperPath = null, $withTest = false)
     {
         $this->_createEntity(new Mtool_Codegen_Entity_Helper(), 'helper', $targetModule, $helperPath);
+
+        if ($withTest && class_exists('Mtool_Providers_Test')) {
+            $testProvider = new Mtool_Providers_Test();
+            $testProvider->setRegistry($this->_registry);
+            $testProvider->add('helper', $helperPath);
+        }
     }
 
     /**
      * Create new helper with module auto-guessing
      * @param string $helperPath in format of mymodule/helper_path
      */
-    public function add($helperPath = null)
+    public function add($helperPath = null, $withTest = false)
     {
         $this->_createEntityWithAutoguess(new Mtool_Codegen_Entity_Helper(), 'helper', $helperPath);
+
+        if ($withTest && class_exists('Mtool_Providers_Test')) {
+            $testProvider = new Mtool_Providers_Test();
+            $testProvider->setRegistry($this->_registry);
+            $testProvider->add('helper', $helperPath);
+        }
     }
 
     /**
