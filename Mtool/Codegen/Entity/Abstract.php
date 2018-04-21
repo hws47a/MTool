@@ -23,10 +23,8 @@
  * @subpackage Entity
  * @author     Daniel Kocherga <dan@oggettoweb.com>
  */
-abstract class Mtool_Codegen_Entity_Abstract
+abstract class Mtool_Codegen_Entity_Abstract implements Mtool_Codegen_Entity_Interface
 {
-    const RECOMMENDED_ZEND_CODING_STANDARD_LINE_LENGTH = 80;
-
     /**
      * Entity folder name
      * @var string

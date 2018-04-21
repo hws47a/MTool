@@ -5,6 +5,6 @@
  * @copyright  Copyright (C) #{year} #{copyright_company}
  * @author     #{author}
  */
-class #{class_name} extends Mage_Core_Model_Abstract
+class #{class_name} extends EcomDev_PHPUnit_Test_Case
 {
 }
