@@ -13,6 +13,6 @@
 $installer = $this;
 $installer->startSetup();
 
-
+//TODO: add actions here
 
 $installer->endSetup();

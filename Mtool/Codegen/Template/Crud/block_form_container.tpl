@@ -26,10 +26,7 @@ class #{class_name} extends Mage_Adminhtml_Block_Widget_Form_Container
     public function getHeaderText()
     {
         $data = Mage::registry('current_#{model_ns}_#{model_path}');
-        if ($data) {
-            return $this->__('Edit Item #%d', $this->escapeHtml($data->getId()));
-        } else {
-            return $this->__('New Item');
-        }
+
+        return $data ? $this->__('Edit Item #%d', $this->escapeHtml($data->getId())) : $this->__('New Item');
     }
 }

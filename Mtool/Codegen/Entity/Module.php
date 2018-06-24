@@ -190,7 +190,7 @@ class Mtool_Codegen_Entity_Module extends Mtool_Codegen_Entity_Abstract
         $modulesTemplate
                 ->setParams(array_merge($params, $this->_templateParams))
                 ->move($this->_moduleSqlDir . DIRECTORY_SEPARATOR . $setupNamspace,
-                       "mysql4-install-{$version}.php");
+                       "install-{$version}.php");
     }
 
     /**
@@ -247,7 +247,7 @@ class Mtool_Codegen_Entity_Module extends Mtool_Codegen_Entity_Abstract
         $modulesTemplate
                 ->setParams(array_merge($params, $this->_templateParams))
                 ->move($this->_moduleSqlDir . DIRECTORY_SEPARATOR . $setupNamspace,
-                       "mysql4-upgrade-{$currentVersion}-{$version}.php");
+                       "upgrade-{$currentVersion}-{$version}.php");
     }
 
     /**

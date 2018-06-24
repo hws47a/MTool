@@ -5,7 +5,7 @@
  * @copyright  Copyright (C) #{year} #{copyright_company}
  * @author     #{author}
  */
-class #{class_name} extends Mage_Core_Model_Mysql4_Collection_Abstract
+class #{class_name} extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
     /**
      * Init model
